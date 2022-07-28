@@ -6,6 +6,8 @@
 //   return output;
 // }
 
+// sayHello('to my little friend');
+
 let age = 50;
 
 const sayHello = function(string) {
@@ -18,10 +20,10 @@ const putTheReturnValueInHere = sayHello(' to my little friend.');
 
 const myOtherVar = sayHello;
 
-myOtherVar.something = 'something else';
+// myOtherVar.something = 'something else';
 
 
-console.log("REALLY??!", myOtherVar.something );
+// console.log("REALLY??!", myOtherVar.something );
 
 console.log('myOtherVar("monkey fuzz!")', myOtherVar('monkey fuzz!'));
 
@@ -32,15 +34,15 @@ const addTwo = function(num) {
 
 const myFuncs = [ addTwo, sayHello ];
 
-// const thisIsAnObject = {first: 'a', second: 'b'};
-// const thisIsAnArray = ['all','manner',544,TRUE];
+const thisIsAnObject = {first: 'a', second: 'b'};
+const thisIsAnArray = ['all','manner',544,TRUE];
 
 // thisIsAnArray.forEach(function(){ console.log("blah"); });
 
-const result = myFuncs[0](5);
-console.log('result:', result);
+// const result = myFuncs[0](5);
+// console.log('result:', result);
 
-console.log('sayHello:',sayHello.toString());
+// console.log('sayHello:',sayHello.toString());
 
 
 // // // console.log('whatever it gave us back:', myOtherVar.toString());

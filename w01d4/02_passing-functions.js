@@ -6,27 +6,25 @@
 // // higher order function (HOF)
 // // a function that accepts another function as an argument
 
-
-function processor(arg1, callback){
-  // does some stuff
-
-  callback();
-
-}
-
-processor(1);
-
-
-
-// const sayHello = function(name) {
-//   console.log(`hello there ${name}`);
-// };
-
-
+const sayHello = function(name) {
+  console.log(`sayHello: hello there ${name}`);
+};
 
 const sayHello2 = function(name) {
   console.log("sayHello2 logs:",`hola!! ${name}`);
 };
+
+function processor(arg1, callback){
+  // does some stuff
+  callback(arg1);
+}
+
+
+
+processor(1,sayHello);
+processor('Dora',sayHello2);
+
+
 
 
 
@@ -36,7 +34,7 @@ const sayHello2 = function(name) {
 //   console.log(num + 2);
 // };
 
-runMe(sayHello2);
+// runMe(sayHello2);
 
 
 

@@ -14,10 +14,10 @@ const funct = function(parameter){ process.stdout.write(parameter*2 + " "); };
 
 // An example where the parameter is a placeholder for a number
 function addTen(value){
-  output = value + 10;
+  let output = value + 10;
   console.log(`addTen output is ${output}`);
 }
-console.log('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'); addTen(number);
+console.log('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'); addTen(number);
 
 // An example where the parameter is a placeholder for some text
 function appendBlah(string){

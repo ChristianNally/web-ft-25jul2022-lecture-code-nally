@@ -4,9 +4,6 @@ function product(x,y){
   return x*y;
 }
 
-
-
-
 const runDatabaseQuery = function(action) {
   // console.log(action.toString());
   // i am running
@@ -26,8 +23,7 @@ const sayHello = function(name){
 };
 
 
-// runDatabaseQuery(sayHello);
-
+runDatabaseQuery(sayHello);
 
 let returnvalue = product(5,9); // 45
 
@@ -35,10 +31,9 @@ let returnvalue = product(5,9); // 45
 
 
 runDatabaseQuery( name => console.log('Hola Amiga! ',name) );
+runDatabaseQuery( function(name){console.log('Hola Amiga! ',name);} );
 
-
-
-
+ 
 
 
 

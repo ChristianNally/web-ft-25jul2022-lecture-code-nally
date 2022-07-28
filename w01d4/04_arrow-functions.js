@@ -1,10 +1,12 @@
-// const sayHello = function(name) {
-//   return `hello there ${name}`;
-// };
+const sayHello = function(name) {
+  return `hello there ${name}`;
+};
 
 const runMyFunction = function(callback) {
   callback('Monkey Fuzz!');
 };
+
+const runMyFunction2 = callback => callback();
 
 // advantages of arrow functions
 // 1. no need for the "function" word
@@ -21,7 +23,7 @@ runMyFunction( function(arg1){console.log('arg1',arg1)} ); //
 
 // Note the GOTCHA: if you're using the word 'this'
 
-const sayHello = name => `hello there ${name}`;
+// const sayHello = name => `hello there ${name}`;
 
 const result = sayHello('Tommy!');
 console.log('Result:',result);
