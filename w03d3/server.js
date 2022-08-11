@@ -7,12 +7,16 @@ const app = express();
 
 app.set("view engine","ejs");
 
+// public folder for static files
+app.use(express.static("public"));
 
 //
 // Users Data
 //
-
-const users = {'nally': "qwerty"};
+const users = {
+  'nally': "qwerty",
+  'monkey': "fuzz"
+};
 
 //
 // Middleware
@@ -69,14 +73,27 @@ app.post("/register",(req,res)=>{
 
 
 // Profile Page
-app.get('/profile',(req,res)=>{
+app.get('/profile',(req,res) => {
   console.log("req.cookies:",req.cookies);
-  if (users[req.cookies.user]){
-    const templateVars = { password: users[req.cookies.user] };
+  
+  if (users[req.cookies.user]) { // if the user is authenticated
+    const templateVars = { 
+      user: req.cookies.user, 
+      password: users[req.cookies.user ] 
+    };
     res.render('profile', templateVars);
-  } else {
-    res.redirect('/login');
-  }
+    return;
+  } 
+
+  res.redirect('/login');
+  return;
+});
+
+app.post("/profile", (req,res) => {
+  console.log("profile req.body:",req.body);
+  const newPassword = req.body.newpassword;
+  users[req.cookies.user] = newPassword;
+  res.redirect('/');
 });
 
 // Logout Route
