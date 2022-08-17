@@ -1,126 +1,108 @@
+// express node app
 const express = require('express');
 const morgan = require('morgan');
+
 // const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
+
 const bcrypt = require('bcrypt');
-const methodOverride = require('method-override');
 
+const PORT = 8889;
 const app = express();
-const port = process.env.PORT || 8080;
-
-// // middleware
-app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
-app.use(morgan('dev'));
-app.use(express.static('public'));
-
-app.use(cookieSession({
-  name: 'cookiemonster',
-  keys: ['my secret key', 'yet another secret key']
-}));
-
-app.use(methodOverride('_method'));
-
-// app.use((req, res, next) => {
-//   if (req.query._method) {
-//     req.method = req.query._method;
-//     next();
-//   }
-// });
-
 app.set('view engine', 'ejs');
 
-// user database
+//
+// middleware
+//
+app.use(morgan('dev'));
+app.use(express.urlencoded({ extended: true }));
+// app.use(cookieParser());
+app.use(cookieSession({
+  name: 'cookiemonster',
+  keys: ['XLVfZYMHAlAIWrovG1B2T6zbAYen6RHo83kL5OIJS7Ijp311e1SsOCF3rR8ZiR1W', 'fadhjfg6433786431278fhjahf6743674hfagds'],
+}));
+
+//
+// database
+//
 const users = {
-  jstamos: {
-    username: 'jstamos',
-    password: '$2b$10$7bOWn.DFgs9HkhzsTpuD1u6pReqRouddq.rO5xSKdWMZGXRehkS8e'
+  'nally': {
+    username: 'nally', 
+    password: '$2b$10$tlyKoVLCedmcLf96S9xTG.vR1h.hxF2/AhMkr7u..jBgWCgT9aF46'
   },
-  alice: {
-    username: 'alice',
-    password: '5678'
-  }
+  monkey: {
+    username: 'monkey',
+    password: '$2b$10$lWnraSXHZPnAYfZtH1xu3u0XiygBLoCNWGt7l.DYXC0IazDDLGYLe'
+  },
 };
 
-// GET routes
-
-app.get('/login', (req, res) => {
-  res.render('login');
+//
+// routes
+//
+app.get('/', (req, res) => {
+  console.log('users', users);
+  res.render('home');
 });
 
+// register
 app.get('/register', (req, res) => {
   res.render('register');
 });
 
-app.get('/protected', (req, res) => {
-  // const username = req.cookies.username;
-  const username = req.session.username;
-
-  if (!username) {
-    return res.redirect('/login');
-  }
-
-  const user = users[username];
-  if (!user) {
-    return res.redirect('/register');
-  }
-
-  console.log('users:',users);
-  res.render('protected', { user });
-});
-
-// app.get('*', (req, res) => {
-//   res.redirect('/login');
-// });
-
-// // POST routes
-// // PATCH /login
-app.patch('/login', (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-
-  const user = users[username];
-  if (!user) {
-    return res.status(401).send('No user with that username found');
-  }
-
-  bcrypt.compare(password, user.password)
-    .then((result) => {
-      if (result) {
-        // res.cookie('username', user.username);
-        req.session.username = user.username;
-        res.redirect('/protected');
-      } else {
-        return res.status(401).send('Password incorrect');
-      }
-    });
-
-});
-
 app.post('/register', (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-
+  console.log(`req.body`,req.body);
+//  users[req.body.username] = {username: req.body.username, password: req.body.password};
   bcrypt.genSalt(10)
     .then((salt) => {
-      return bcrypt.hash(password, salt);
+      console.log('salt', salt);
+      return bcrypt.hash(req.body.password, salt);
     })
     .then((hash) => {
-      users[username] = {
-        username,
-        password: hash
-      };
-      console.log(users);
-      res.redirect('/login');
+      console.log('hash', hash);
+      users[req.body.username] = {username: req.body.username, password: hash};
+      console.log('users', users);
     });
+  res.redirect('/');
 });
 
-app.post('/logout', (req, res) => {
-  // res.clearCookie('username');
-  req.session = null;
-  res.redirect('/login');
+// login
+app.get('/login', (req, res) => {
+  res.render('login');
 });
 
-app.listen(port, () => {
-  console.log(`server listening on port ${port}`);
+app.post('/login', (req, res) => {
+  console.log('req.body', req.body);
+  bcrypt.compare(req.body.password, users[req.body.username].password)
+  .then((result) => {
+    console.log('do the passwords match?', result);
+    if (result) {
+//      res.cookie('username', users[req.body.username].username);
+      req.session.username = users[req.body.username].username;
+      res.redirect('/');
+    } else {
+      res.redirect('/login');
+    }
+  });
+});
+
+// profile
+app.get('/profile', (req, res) => {
+  if (req.session.username) {
+    res.render('profile', {username: req.session.username});
+  } else {
+    res.redirect('/login');
+  }
+});
+
+//logout
+app.get('/logout', (req, res) => {
+  // clear the cookie
+  // res.clearCookie('userId');
+  // delete the session variable
+  delete req.session.username;
+  res.redirect('/');
+});
+
+app.listen(PORT, () => {
+  console.log(`listening on port ${PORT}`);
 });
